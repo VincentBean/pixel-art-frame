@@ -59,12 +59,17 @@ export default {
       open: false
     }
   },
-  created() {
-    console.log(this.$route.fullPath == window.location.href);
-  },
   computed: {
     routes: () => {
-      return r;
+
+      let routes = [];
+
+      for (let i = 0; i < r.length; i++) {
+        if (r[i].hidden) continue;
+        routes.push(r[i]);
+      }
+
+      return routes;
     }
 
   },
