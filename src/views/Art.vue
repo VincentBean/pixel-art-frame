@@ -83,9 +83,12 @@ export default {
       this.files = [];
 
       var self = this;
-      this.$http.post('file/delete?name=' + file).then((response) => {
-        self.getFiles();
-      });
+
+      setTimeout(() => {
+        self.$http.post('file/delete?name=' + file).then((response) => {
+          self.getFiles();
+        });
+      }, 500);
     }
   }
 }

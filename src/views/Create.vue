@@ -9,7 +9,8 @@
           <div class="md:col-span-1">
             <h3 class="text-lg font-medium leading-6 text-gray-900">Upload Art</h3>
             <p class="mt-1 text-sm text-gray-500">
-              The Pixel Art Frame plays animated GIF files.
+              The Pixel Art Frame plays animated GIF files, you can upload them here.
+              The files will be put on the SD card in the <i>/gifs</i> directory
             </p>
           </div>
           <div class="mt-5 md:mt-0 md:col-span-2">

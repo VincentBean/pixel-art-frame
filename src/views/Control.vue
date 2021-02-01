@@ -113,7 +113,7 @@ export default {
 
       if (value <= 1) value = 2;
 
-      this.$http.get('panel/brightness?value=' + value);
+      this.$http.post('panel/brightness?value=' + value);
     },
     next() {
       var self = this;
