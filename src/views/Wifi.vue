@@ -18,7 +18,7 @@
                      name="password" id="password"
                      class="shadow-sm max-w-lg float-left focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                      placeholder="WiFi Password">
-              <button
+              <button @click="ssid = network.ssid"
                   class="inline-flex items-center shadow-sm px-4 py-2 float-left ml-3 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 hover:text-white bg-white hover:bg-indigo-600">
                 <span v-if="ssid != network.ssid" @click="ssid = network.ssid">Select</span>
                 <span v-if="ssid == network.ssid" @click="connect()">Connect</span>
@@ -63,7 +63,7 @@
 
     <div class="max-w-xs w-full ml-3">
       <label for="pass" class="sr-only">Password</label>
-      <input type="password" name="password" id="pass" v-model="password"
+      <input type="password" name="password" id="pass" v-model="password" @keyup.enter.native="connect()"
              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
              placeholder="Password">
     </div>
@@ -98,16 +98,10 @@ export default {
       this.networks = [];
 
       var self = this;
-      this.$http.post('/wifi/scan').then(function () {
-        self.getNetworks();
+      this.$http.get('/wifi/scan').then(function (response) {
+        self.networks = response.data;
+        self.scanning = false;
       });
-    },
-    getNetworks() {
-
-      this.$http.get('/wifi/networks').then(function (response) {
-        console.log(response);
-      });
-
     },
     connect() {
       this.$http.post('/config/wifi?ssid=' + this.ssid + '&pass=' + this.password).then(function (response) {
