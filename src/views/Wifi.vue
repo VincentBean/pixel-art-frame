@@ -2,6 +2,37 @@
   <PageHeading title="Connect to Wifi network"></PageHeading>
   <div>
     <div class="flow-root mt-6">
+
+      <div class="rounded-md bg-green-50 p-4 mb-4" v-if="saved">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <!-- Heroicon name: check-circle -->
+            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-green-800">
+              WiFi network saved!
+            </h3>
+            <div class="mt-2 text-sm text-green-700">
+              <p>
+                Restart the Pixel Art Frame to connect to the newly configured network.<br/>
+                You might lose connection when connecting to a different network.<br/>
+                If the connection fails the Pixel Art Frame will create a new WiFi access point for you to configure another network.
+              </p>
+            </div>
+            <div class="mt-4">
+              <div class="-mx-2 -my-1.5 flex">
+                <button @click="restart()" class="bg-green-50 px-2 py-1.5 rounded-md text-sm font-medium text-green-800 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600">
+                  Restart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <ul class="-my-5 divide-y divide-gray-200">
         <li class="py-4" v-for="network in networks">
           <div class="flex items-center space-x-4">
@@ -19,7 +50,7 @@
                      class="shadow-sm max-w-lg float-left focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                      placeholder="WiFi Password">
               <button @click="ssid = network.ssid"
-                  class="inline-flex items-center shadow-sm px-4 py-2 float-left ml-3 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 hover:text-white bg-white hover:bg-indigo-600">
+                      class="inline-flex items-center shadow-sm px-4 py-2 float-left ml-3 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 hover:text-white bg-white hover:bg-indigo-600">
                 <span v-if="ssid != network.ssid" @click="ssid = network.ssid">Select</span>
                 <span v-if="ssid == network.ssid" @click="connect()">Connect</span>
               </button>
@@ -84,6 +115,7 @@ export default {
   data: function () {
     return {
       scanning: false,
+      saved: false,
 
       networks: [],
 
@@ -104,10 +136,14 @@ export default {
       });
     },
     connect() {
+      var self = this;
       this.$http.post('/config/wifi?ssid=' + this.ssid + '&pass=' + this.password).then(function (response) {
-        alert(response.data);
+        self.saved = true;
       });
       this.password = this.ssid = '';
+    },
+    restart() {
+      this.$http.post('/restart');
     }
   }
 }
