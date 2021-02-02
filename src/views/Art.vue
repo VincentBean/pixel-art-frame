@@ -8,7 +8,7 @@
           <div class="flex items-center space-x-4">
             <div class="flex-shrink-0">
               <img class="h-8 w-8 rounded-full"
-                   :img-src="'http://192.168.178.96/file?name=' + file"
+                   :ref="file"
                    alt="">
             </div>
             <div class="flex-1 min-w-0">
@@ -37,13 +37,9 @@
             </div>
           </div>
         </li>
-
-
       </ul>
     </div>
   </div>
-
-
 </template>
 
 <script>
@@ -67,6 +63,10 @@ export default {
       var self = this;
       this.$http.get("files").then((response) => {
         self.files = response.data;
+
+        setTimeout(function () {
+          self.loadImages();
+        }, 100);
       });
     },
     getFilename(file) {
@@ -89,7 +89,20 @@ export default {
           self.getFiles();
         });
       }, 500);
-    }
+    },
+    loadImages() {
+      var self = this;
+      for (let i = 0; i < this.files.length; i++) {
+        let file = this.files[i];
+
+        let element = this.$refs[file];
+
+        setTimeout(function () {
+          element.src = self.$http.defaults.baseURL + 'file?name=' + file;
+        }, 250 * i)
+      }
+
+    },
   }
 }
 </script>
