@@ -2,7 +2,7 @@
   <PageHeading title="Upload art"/>
 
   <div class="space-y-6 mt-4">
-    <form class="space-y-6" action="http://192.168.178.150/upload" method="POST" enctype="multipart/form-data">
+    <form class="space-y-6" action="/upload" method="POST" enctype="multipart/form-data">
 
       <div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
         <div class="md:grid md:grid-cols-3 md:gap-6">

@@ -1,8 +1,8 @@
 <template>
   <PageHeading title="Art" :button="{ label: 'Upload', path: '/art/create' }"/>
 
-  <div>
-    <div class="flow-root mt-8">
+  <Panel>
+    <div class="flow-root">
       <ul class="-my-5 divide-y divide-gray-200">
         <li class="py-4" v-for="file in files">
           <div class="flex items-center space-x-4">
@@ -39,16 +39,18 @@
         </li>
       </ul>
     </div>
-  </div>
+  </Panel>
 </template>
 
 <script>
 import PageHeading from "../components/PageHeading.vue";
+import Panel from "../components/Panel.vue"
 
 export default {
   name: "Art",
   components: {
-    PageHeading
+    PageHeading,
+    Panel
   },
   data: () => {
     return {
