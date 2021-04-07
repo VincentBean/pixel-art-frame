@@ -7,8 +7,11 @@
         <div class="flex">
           <div class="flex-shrink-0">
             <!-- Heroicon name: check-circle -->
-            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                 fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"/>
             </svg>
           </div>
           <div class="ml-3">
@@ -19,12 +22,14 @@
               <p>
                 Restart the Pixel Art Frame to connect to the newly configured network.<br/>
                 You might lose connection when connecting to a different network.<br/>
-                If the connection fails the Pixel Art Frame will create a new WiFi access point for you to configure another network.
+                If the connection fails the Pixel Art Frame will create a new WiFi access point for you to configure
+                another network.
               </p>
             </div>
             <div class="mt-4">
               <div class="-mx-2 -my-1.5 flex">
-                <button @click="restart()" class="bg-green-50 px-2 py-1.5 rounded-md text-sm font-medium text-green-800 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600">
+                <button @click="restart()"
+                        class="bg-green-50 px-2 py-1.5 rounded-md text-sm font-medium text-green-800 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600">
                   Restart
                 </button>
               </div>
@@ -137,6 +142,10 @@ export default {
     },
     connect() {
       var self = this;
+
+      if (this.password == '')
+        return;
+
       this.$http.post('/config/wifi?ssid=' + this.ssid + '&pass=' + this.password).then(function (response) {
         self.saved = true;
       });
