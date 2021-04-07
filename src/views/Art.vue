@@ -2,14 +2,14 @@
   <PageHeading title="Art" :button="{ label: 'Upload', path: '/art/create' }"/>
 
   <Panel>
+    <span class="text-gray-600" v-if="files.length == 0">Retrieving art...</span>
+
     <div class="flow-root">
       <ul class="-my-5 divide-y divide-gray-200">
         <li class="py-4" v-for="file in files">
           <div class="flex items-center space-x-4">
             <div class="flex-shrink-0">
-              <img class="h-8 w-8 rounded-full"
-                   :ref="file"
-                   alt="">
+              <img @click="preview(file)" :id="file" class="h-8 w-32 cursor-pointer" alt="" :lazy-src="'/file?name=' + file">
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-900 truncate">
@@ -39,6 +39,14 @@
         </li>
       </ul>
     </div>
+    <button v-if="canLoadMore" v-on:click="getFiles" type="button"
+            class="mt-6 inline-flex items-center px-12 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      Load more
+    </button>
+    <button v-if="canLoadMore" v-on:click="getFiles(true)" type="button"
+            class="ml-4 mt-6 inline-flex items-center px-12 py-2 border border-gray-300 shadow-sm text-center text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      Load all
+    </button>
   </Panel>
 </template>
 
@@ -54,22 +62,61 @@ export default {
   },
   data: () => {
     return {
+      indexCount: 0,
+      currentIndex: 0,
+      loading: true,
+
       files: []
+    }
+  },
+  computed: {
+    canLoadMore() {
+      return !this.loading && this.indexCount != (this.currentIndex - 1);
     }
   },
   created() {
     this.getFiles();
   },
   methods: {
-    getFiles() {
-      var self = this;
-      this.$http.get("files").then((response) => {
-        self.files = response.data;
+    getFiles(all) {
+      // TODO: Add option to get files via /files endpoint
 
-        setTimeout(function () {
-          self.loadImages();
-        }, 100);
+      this.getFilesByIndex(all);
+    },
+    getFilesByIndex(all) {
+      let self = this;
+
+      if (all === undefined)
+        all = false;
+
+      if (this.indexCount > 0 && !this.canLoadMore) {
+        return; // All files retrieved
+      }
+
+      this.loading = true;
+
+      if (this.indexCount == 0) {
+        this.$http.get('index/count').then(function (response) {
+          self.indexCount = response.data;
+          self.loading = false;
+          self.getFilesByIndex();
+        });
+
+        return;
+      }
+
+      this.$http.get('index/index.' + this.currentIndex).then(function (response) {
+        self.files = self.files.concat(response.data.split("\n"));
+        self.files.pop(); // Last line is empty
+
+        self.currentIndex++;
+        self.loading = false;
+
+        if (all) {
+          self.getFilesByIndex(all);
+        }
       });
+
     },
     getFilename(file) {
       return file.replace('/gifs/', '').replace('.gif', '');
@@ -92,23 +139,11 @@ export default {
         });
       }, 500);
     },
-    loadImages() {
-      var self = this;
-      for (let i = 0; i < this.files.length; i++) {
-        let file = this.files[i];
-
-        let element = this.$refs[file];
-
-        setTimeout(function () {
-          element.src = self.$http.defaults.baseURL + 'file?name=' + file;
-        }, 250 * i)
-      }
-
-    },
+    preview(file) {
+      let elem = document.getElementById(file);
+      let src = elem.getAttribute('lazy-src');
+      elem.setAttribute('src', src);
+    }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

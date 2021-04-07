@@ -14,19 +14,11 @@
           <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div class="sm:col-span-4">
               <label class="block text-sm font-medium text-gray-700">
-                Next / Previous Animation
+                Autoplay / Next
               </label>
               <div class="mt-2 flex ">
-                <button type="button" @click="prev()"
-                        class="inline-flex items-center p-3 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                       xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                  </svg>
-                </button>
                 <button type="button" @click="toggleAutoplay()"
-                        class="ml-4 inline-flex items-center p-3 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        class="inline-flex items-center p-3 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
 
                   <svg v-if="!autoplay" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none"
                        viewBox="0 0 24 24" stroke="currentColor">
@@ -140,12 +132,6 @@ export default {
     next() {
       var self = this
       this.$http.get('gif/next').then(() => {
-        self.updateData()
-      })
-    },
-    prev() {
-      var self = this
-      this.$http.get('gif/prev').then(() => {
         self.updateData()
       })
     },

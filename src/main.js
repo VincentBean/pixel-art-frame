@@ -10,6 +10,7 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes
 })
+axios.defaults.baseURL = 'http://192.168.4.1/';
 
 createApp(App)
     .use(router)
